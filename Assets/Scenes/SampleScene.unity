@@ -531,8 +531,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 49832409}
-  m_LocalRotation: {x: 0.0866804, y: 0.47947073, z: -0.047663305, w: 0.8719648}
-  m_LocalPosition: {x: 0.14565921, y: -0.5319551, z: 0.09240055}
+  m_LocalRotation: {x: 0.12140183, y: 0.4771872, z: -0.0667557, w: 0.86781204}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4896,7 +4896,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 422906000}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 1.214, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6586,7 +6586,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 614055839}
-  m_LocalRotation: {x: 0.10621166, y: 0.47828135, z: -0.058403023, w: 0.8698018}
+  m_LocalRotation: {x: 0.080935106, y: 0.47977424, z: -0.044504106, w: 0.8725168}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7904,7 +7904,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 653743062}
-  m_LocalRotation: {x: 0.12635875, y: 0.476798, z: -0.06948138, w: 0.8671041}
+  m_LocalRotation: {x: 0.10115197, y: 0.47861284, z: -0.055620834, w: 0.8704047}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8150,7 +8150,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 759144135}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.8288274, y: 2.17, z: -1.7945015}
+  m_LocalPosition: {x: -2.8288271, y: 2.17, z: -1.7945015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -8950,8 +8950,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 826937685}
-  m_LocalRotation: {x: 0.12635876, y: 0.47679803, z: -0.06948139, w: 0.86710405}
-  m_LocalPosition: {x: -2.8288274, y: 2.17, z: -1.7945015}
+  m_LocalRotation: {x: 0.10115199, y: 0.47861287, z: -0.055620838, w: 0.8704047}
+  m_LocalPosition: {x: -2.8288271, y: 2.17, z: -1.7945015}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -24696,6 +24696,7 @@ GameObject:
   - component: {fileID: 675625927718292494}
   - component: {fileID: 675625927718292483}
   - component: {fileID: 675625927718292482}
+  - component: {fileID: 675625927718292495}
   m_Layer: 3
   m_Name: Player
   m_TagString: Player
@@ -24755,6 +24756,21 @@ MonoBehaviour:
   maxFloorAngle: 48
   maxStepHeight: 0.5
   canClimbSteepSlope: 1
+--- !u!114 &675625927718292495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 675625927718292484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1662ea7cbab2c884cb3f24556e7f364e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraAnim: {fileID: 4243254899444055369}
+  mover: {fileID: 675625927718292494}
+  characterController: {fileID: 675625927718292482}
 --- !u!4 &675625928203427362
 Transform:
   m_ObjectHideFlags: 0
@@ -24763,7 +24779,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675625928203427365}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -25552,13 +25568,16 @@ Animator:
   m_GameObject: {fileID: 7442459661904772489}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: 5be7284364c61514da509ce4a66f71cb, type: 3}
-  m_Controller: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 74dbca4463da9c64384ca9e0526e249a, type: 2}
   m_CullingMode: 1
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
-  m_WarningMessage: 
+  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
+    are already bound by a Humanoid avatar. These transforms can only be changed
+    by Humanoid clips.\n\tTransform 'mixamorig:Hips'\n\tTransform 'mixamorig:Hips'\n\tFrom
+    animation clip 'Jump'"
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -26623,7 +26642,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7442459661904772489}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

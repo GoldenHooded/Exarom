@@ -76,6 +76,7 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
             if (isGrounded && Input.GetButtonDown("X"))
             {
+                GetComponent<CharacterAnimator>().Jump();
                 verticalSpeed = jumpSpeed;
                 nextUngroundedTime = -1f;
                 isGrounded = false;
