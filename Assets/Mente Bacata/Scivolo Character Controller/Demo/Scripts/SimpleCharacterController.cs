@@ -45,6 +45,7 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
         private MovingPlatform movingPlatform;
 
+        public Vector3 velocity;
 
         private void Start()
         {
@@ -58,7 +59,6 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
             float deltaTime = Time.deltaTime;
             Vector3 movementInput = GetMovementInput();
 
-            Vector3 velocity;
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 velocity = fastMoveSpeed * movementInput;

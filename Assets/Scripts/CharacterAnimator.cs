@@ -22,12 +22,6 @@ public class CharacterAnimator : MonoBehaviour
 
     private void Update()
     {
-        // Obtener el input horizontal y vertical
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
-        input = new Vector2(horizontalInput, verticalInput).normalized;
-
-        // Calcular el valor del blend tree en base a la dirección y el input
         CalculateBlendTreeValues();
     }
 
@@ -55,18 +49,20 @@ public class CharacterAnimator : MonoBehaviour
 
     private void CalculateBlendTreeValues()
     {
+        // Obtener la velocidad del personaje en el plano XZ
+        Vector3 velocity = new Vector3(characterController.velocity.x, 0f, characterController.velocity.z);
+        velocity.Normalize();
+
         // Obtener la dirección del personaje en el plano XZ
-        Vector3 characterDirection = Quaternion.Euler(0f, cameraTransform.eulerAngles.y, 0f) * Vector3.forward;
-        characterDirection.y = 0f;
+        Vector3 characterDirection = new Vector3(transform.forward.x*2, 0f, transform.forward.z*2);
         characterDirection.Normalize();
 
-        // Calcular los valores del blend tree en base a la dirección y el input
-        float yDirValue = Vector2.Dot(input, new Vector2(characterDirection.x, characterDirection.z));
-        float xDirValue = Vector2.Dot(input, new Vector2(-characterDirection.z, characterDirection.x));
+        // Calcular la diferencia entre la velocidad y la dirección
+        Vector2 difference = new Vector2(velocity.x - characterDirection.x, velocity.z - characterDirection.z);
 
-        // Asignar los valores al blend tree en el Animator
-        cameraAnim.SetFloat("YDir", yDirValue);
-        cameraAnim.SetFloat("XDir", xDirValue);
+        // Pasar la diferencia al blend tree
+        cameraAnim.SetFloat("YDir", difference.y);
+        cameraAnim.SetFloat("XDir", difference.x);
     }
 
     public void Jump()
