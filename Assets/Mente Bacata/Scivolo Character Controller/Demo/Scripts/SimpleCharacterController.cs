@@ -8,9 +8,13 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 {
     public class SimpleCharacterController : MonoBehaviour
     {
+        public float slowMoveSpeed = 2f;
+
         public float normalMoveSpeed = 5f;
 
         public float fastMoveSpeed = 8f;
+
+        public float realMoveSpeed = 5f;
 
         public float jumpSpeed = 8f;
         
@@ -23,6 +27,8 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
         public GroundDetector groundDetector;
 
         public MeshRenderer groundedIndicator;
+
+        public CharacterAnimator characterAnimator;
 
         private const float minVerticalSpeed = -12f;
 
@@ -59,14 +65,7 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
             float deltaTime = Time.deltaTime;
             Vector3 movementInput = GetMovementInput();
 
-            if (Input.GetKey(KeyCode.LeftShift))
-            {
-                velocity = fastMoveSpeed * movementInput;
-            }
-            else
-            {
-                velocity = normalMoveSpeed * movementInput;
-            }
+            velocity = realMoveSpeed * movementInput;
 
             bool groundDetected = DetectGroundAndCheckIfGrounded(out bool isGrounded, out GroundInfo groundInfo);
 
