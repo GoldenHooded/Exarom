@@ -91,19 +91,20 @@ public class CharacterAnimator : MonoBehaviour
                 if (anim.GetBool("Walk"))
                 {
                     playerValues.stamina -= Time.deltaTime * staminaSpent;
-                    playerValues.canRecoverStamina = false;
-                }
-                else
-                {
-                    playerValues.canRecoverStamina = true;
                 }
                 anim.SetBool("Run", true);
             }
             else
             {
                 anim.SetBool("Run", false);
-                playerValues.canRecoverStamina = true;
             }
+        }
+
+        playerValues.canRecoverStamina = !anim.GetBool("Run");
+        
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            playerValues.canRecoverStamina = false;
         }
     }
 

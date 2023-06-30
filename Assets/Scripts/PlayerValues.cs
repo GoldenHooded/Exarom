@@ -17,7 +17,8 @@ public class PlayerValues : MonoBehaviour
     [Range(0, 1)] public float stamina = 1;
     private float realStamina = 1;
     public bool canRecoverStamina = false;
-
+    public float staminaRecoverSpeed;
+    private bool recoveringStamina = false;
 
     private bool staminaTrigger = false;
     void Update()
@@ -30,7 +31,7 @@ public class PlayerValues : MonoBehaviour
         realStamina = Mathf.Lerp(realStamina, stamina, Time.deltaTime * staminaSpeedChange);
         staminaBar.fillAmount = realStamina;
 
-        if (stamina != 1)
+        if (stamina < 0.95)
         {
             staminaAlpha = 1;
         }
@@ -38,5 +39,36 @@ public class PlayerValues : MonoBehaviour
         {
             staminaAlpha = 0;
         }
+
+        if (stamina > 1)
+        {
+            stamina = 1;
+        }
+
+        if (canRecoverStamina && !staminaTrigger)
+        {
+            Invoke("StartRecovery", 1.5f);
+            staminaTrigger = true;
+        }
+        else if (!canRecoverStamina)
+        {
+            staminaTrigger = false;
+            recoveringStamina = false;
+        }
+
+        if (recoveringStamina && stamina < 1)
+        {
+            stamina += staminaRecoverSpeed * Time.deltaTime;
+        }
+
+        if (stamina >= 1)
+        {
+            recoveringStamina = false;
+        }
+    }
+
+    private void StartRecovery()
+    {
+        recoveringStamina = true;
     }
 }
