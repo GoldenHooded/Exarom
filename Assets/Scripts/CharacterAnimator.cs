@@ -6,7 +6,17 @@ using UnityEngine;
 
 public class CharacterAnimator : MonoBehaviour
 {
-    [SerializeField] private Animator cameraAnim;
+    public bool preventMoving = false;
+
+    public bool preventRotation = false;
+
+    public Animator anim;
+
+    public LayerMask collisionLayer;
+
+    public float distanceToGround;
+
+    [SerializeField] private CharacterIK characterIK;
 
     [SerializeField] private CharacterMover mover;
 
@@ -18,9 +28,11 @@ public class CharacterAnimator : MonoBehaviour
 
     [SerializeField] private float crouchedHeight;
 
-    [SerializeField] float blendSmoothness = 5f;
+    [SerializeField] private float blendSmoothness = 5f;
 
-    [SerializeField] LayerMask collisionLayer;
+    [SerializeField] private PlayerValues playerValues;
+
+    [SerializeField] private float staminaSpent;
 
     private Transform cameraTransform;
 
@@ -33,6 +45,9 @@ public class CharacterAnimator : MonoBehaviour
     private void Update()
     {
         CalculateBlendTreeValues();
+
+        characterController.canMove = !preventMoving;
+        characterController.canRotate = !preventRotation;
     }
 
     private void Start()
@@ -43,38 +58,51 @@ public class CharacterAnimator : MonoBehaviour
 
     void LateUpdate()
     {
-        cameraAnim.SetBool("Air", !mover.isInWalkMode);
+        preventMoving = characterIK.preventMoving;
+        preventRotation = characterIK.preventRotation;
+
+        anim.SetBool("Air", !mover.isInWalkMode);
 
         if (Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0)
         {
-            cameraAnim.SetBool("Walk", true);
+            anim.SetBool("Walk", true);
         }
         else
         {
-            cameraAnim.SetBool("Walk", false);
-            cameraAnim.SetBool("Run", false);
+            anim.SetBool("Walk", false);
+            anim.SetBool("Run", false);
         }
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
             characterCapsule.Height = crouchedHeight;
-            cameraAnim.SetBool("Crouched", true);
+            anim.SetBool("Crouched", true);
             characterController.realMoveSpeed = characterController.slowMoveSpeed;
         }
         else if (!Physics.Raycast(transform.position, transform.up, normalHeight - 0.1f, collisionLayer))
         {
             characterController.realMoveSpeed = characterController.normalMoveSpeed;
-            cameraAnim.SetBool("Crouched", false);
+            anim.SetBool("Crouched", false);
             characterCapsule.Height = normalHeight;
 
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.LeftShift) && playerValues.stamina > 0)
             {
                 characterController.realMoveSpeed = characterController.fastMoveSpeed;
-                cameraAnim.SetBool("Run", true);
+                if (anim.GetBool("Walk"))
+                {
+                    playerValues.stamina -= Time.deltaTime * staminaSpent;
+                    playerValues.canRecoverStamina = false;
+                }
+                else
+                {
+                    playerValues.canRecoverStamina = true;
+                }
+                anim.SetBool("Run", true);
             }
             else
             {
-                cameraAnim.SetBool("Run", false);
+                anim.SetBool("Run", false);
+                playerValues.canRecoverStamina = true;
             }
         }
     }
@@ -99,14 +127,14 @@ public class CharacterAnimator : MonoBehaviour
         Vector2 smoothBlendDirection = Vector2.Lerp(GetCurrentBlendDirection(), blendDirection, blendSmoothness * Time.deltaTime);
 
         // Pasar la diferencia al blend tree
-        cameraAnim.SetFloat("YDir", smoothBlendDirection.y);
-        cameraAnim.SetFloat("XDir", smoothBlendDirection.x);
+        anim.SetFloat("YDir", smoothBlendDirection.y);
+        anim.SetFloat("XDir", smoothBlendDirection.x);
     }
 
     private Vector2 GetCurrentBlendDirection()
     {
-        float yDir = cameraAnim.GetFloat("YDir");
-        float xDir = cameraAnim.GetFloat("XDir");
+        float yDir = anim.GetFloat("YDir");
+        float xDir = anim.GetFloat("XDir");
         return new Vector2(xDir, yDir);
     }
 
@@ -130,11 +158,13 @@ public class CharacterAnimator : MonoBehaviour
         else
         {
             return new Vector2(-1f, 0f); // Hacia la izquierda
-        }
+        }   
     }
 
     public void Jump()
     {
-        cameraAnim.SetTrigger("Jump");
-    }
+        anim.SetTrigger("Jump");
+        Invoke("ResetJump", 0.1f);
+    } 
+    private void ResetJump() { anim.ResetTrigger("Jump"); }
 }

@@ -8,6 +8,10 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 {
     public class SimpleCharacterController : MonoBehaviour
     {
+        public bool canMove = true;
+
+        public bool canRotate = true;
+
         public float slowMoveSpeed = 2f;
 
         public float normalMoveSpeed = 5f;
@@ -22,6 +26,8 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
         public float gravity = -25f;
 
+        public float hardJumpTresshold = -5;
+
         public CharacterMover mover;
 
         public GroundDetector groundDetector;
@@ -30,13 +36,13 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
         public CharacterAnimator characterAnimator;
 
-        private const float minVerticalSpeed = -12f;
+        private const float minVerticalSpeed = -20f;
 
         // Allowed time before the character is set to ungrounded from the last time he was safely grounded.
         private const float timeBeforeUngrounded = 0.02f;
 
         // Speed along the character local up direction.
-        private float verticalSpeed = 0f;
+        public float verticalSpeed = 0f;
 
         // Time after which the character should be considered ungrounded.
         private float nextUngroundedTime = -1f;
@@ -73,38 +79,50 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
             isOnMovingPlatform = false;
 
-            if (isGrounded && Input.GetButtonDown("X"))
+            if (canMove)
             {
-                GetComponent<CharacterAnimator>().Jump();
-                verticalSpeed = jumpSpeed;
-                nextUngroundedTime = -1f;
-                isGrounded = false;
+                if (isGrounded && Input.GetButtonDown("X"))
+                {
+                    GetComponent<CharacterAnimator>().Jump();
+                    verticalSpeed = jumpSpeed;
+                    nextUngroundedTime = -1f;
+                    isGrounded = false;
+                }
+
+                if (isGrounded)
+                {
+                    mover.isInWalkMode = true;
+                    verticalSpeed = 0f;
+
+                    if (groundDetected)
+                        isOnMovingPlatform = groundInfo.collider.TryGetComponent(out movingPlatform);
+                }
+                else
+                {
+                    mover.isInWalkMode = false;
+
+                    BounceDownIfTouchedCeiling();
+
+                    verticalSpeed += gravity * deltaTime;
+
+                    if (verticalSpeed < minVerticalSpeed)
+                        verticalSpeed = minVerticalSpeed;
+
+                    velocity += verticalSpeed * transform.up;
+                }
+
+                mover.Move(velocity * deltaTime, moveContacts, out contactCount);
             }
 
-            if (isGrounded)
+            if (canRotate)
             {
-                mover.isInWalkMode = true;
-                verticalSpeed = 0f;
-
-                if (groundDetected)
-                    isOnMovingPlatform = groundInfo.collider.TryGetComponent(out movingPlatform);
-            }
-            else
-            {
-                mover.isInWalkMode = false;
-
-                BounceDownIfTouchedCeiling();
-
-                verticalSpeed += gravity * deltaTime;
-
-                if (verticalSpeed < minVerticalSpeed)
-                    verticalSpeed = minVerticalSpeed;
-
-                velocity += verticalSpeed * transform.up;
+                RotateTowards(velocity);
             }
 
-            RotateTowards(velocity);
-            mover.Move(velocity * deltaTime, moveContacts, out contactCount);
+            if (verticalSpeed < hardJumpTresshold)
+            {
+                characterAnimator.anim.SetBool("HardLand", true);
+            }
         }
 
         private void LateUpdate()
