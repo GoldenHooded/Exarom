@@ -9,8 +9,8 @@ public class PlayerValues : MonoBehaviour
     [SerializeField] private Image staminaBar;
     [SerializeField] private float staminaSpeedAlpha;
 
-    private float staminaAlphaReal = 1;
-    [Range(0, 1)] [SerializeField] private float staminaAlpha = 1;
+    private float staminaAlphaReal = 0;
+    [Range(0, 1)] [SerializeField] private float staminaAlpha = 0;
     [SerializeField] private float staminaSpeedChange = 10;
 
     [Space(10)]

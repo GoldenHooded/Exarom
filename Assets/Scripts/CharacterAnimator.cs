@@ -34,6 +34,8 @@ public class CharacterAnimator : MonoBehaviour
 
     [SerializeField] private float staminaSpent;
 
+    [SerializeField] private ClimbManager climbManager;
+
     private Transform cameraTransform;
 
     private Rigidbody rb;
@@ -102,10 +104,21 @@ public class CharacterAnimator : MonoBehaviour
 
         playerValues.canRecoverStamina = !anim.GetBool("Run");
         
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) || climbManager.onClimbMode)
         {
             playerValues.canRecoverStamina = false;
         }
+
+        if (climbManager.onClimbMode)
+        {
+            Climb();
+        }
+    }
+
+    private void Climb()
+    {
+        characterIK.IKLeftFootWeight = 0;
+        characterIK.IKRightFootWeight = 0;
     }
 
     private void CalculateBlendTreeValues()
