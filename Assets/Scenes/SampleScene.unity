@@ -696,8 +696,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 49832409}
-  m_LocalRotation: {x: -0.0208454, y: 0.97796494, z: -0.1692287, w: -0.1204646}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.06284367, y: 0.8846586, z: -0.12500271, w: 0.4447519}
+  m_LocalPosition: {x: 0.00000071525574, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -757,7 +757,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh28284
+  m_Name: pb_Mesh59484
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -7868,7 +7868,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 614055839}
-  m_LocalRotation: {x: -0.0208454, y: 0.97796494, z: -0.16922873, w: -0.12046458}
+  m_LocalRotation: {x: 0.06284366, y: 0.8846586, z: -0.12500265, w: 0.44475195}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9021,7 +9021,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 653743062}
-  m_LocalRotation: {x: -0.01803335, y: 0.98164195, z: -0.14639972, w: -0.12091752}
+  m_LocalRotation: {x: 0.052465476, y: 0.8873306, z: -0.104359366, w: 0.4460953}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -9597,7 +9597,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 759144135}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.65708137, y: 2.17, z: 3.2849274}
+  m_LocalPosition: {x: -2.6887717, y: 2.17, z: 1.998251}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10419,8 +10419,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 826937685}
-  m_LocalRotation: {x: -0.01803335, y: 0.98164195, z: -0.14639972, w: -0.120917514}
-  m_LocalPosition: {x: 0.09982598, y: 1.3507578, z: 0.3990593}
+  m_LocalRotation: {x: 0.052465487, y: 0.88733053, z: -0.104359396, w: 0.44609526}
+  m_LocalPosition: {x: -2.6887717, y: 2.17, z: 1.998251}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -10583,7 +10583,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &832575518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20169,7 +20169,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh28864
+  m_Name: pb_Mesh60068
   serializedVersion: 11
   m_SubMeshes:
   - serializedVersion: 2
@@ -33823,7 +33823,9 @@ MonoBehaviour:
   groundedIndicator: {fileID: 0}
   characterAnimator: {fileID: 675625927718292495}
   verticalSpeed: 0
+  contactCount: 0
   velocity: {x: 0, y: 0, z: 0}
+  climbManager: {fileID: 675625927718292496}
 --- !u!114 &675625927718292483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -33868,7 +33870,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 675625927718292484}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.5, y: 2, z: -37.5}
+  m_LocalPosition: {x: 3.65, y: 2, z: -27.01}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -33955,9 +33957,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   onClimbMode: 0
   canClimb: 1
-  staminaSpentSpeed: 0.08
+  staminaSpentSpeed: 0.05
   characterController: {fileID: 675625927718292482}
   playerValues: {fileID: 675625927718292497}
+  rayOffset: {x: 0, y: 1, z: 0}
+  climbable:
+    serializedVersion: 2
+    m_Bits: 1
+  moveSpeed: 3
+  keyTrigger: 0
+  firstTime: 1
 --- !u!114 &675625927718292497
 MonoBehaviour:
   m_ObjectHideFlags: 0

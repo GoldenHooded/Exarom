@@ -49,15 +49,17 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
         private Transform cameraTransform;
         
-        private MoveContact[] moveContacts = CharacterMover.NewMoveContactArray;
+        [HideInInspector] public MoveContact[] moveContacts = CharacterMover.NewMoveContactArray;
 
-        private int contactCount;
+        [HideInInspector] public int contactCount;
 
         private bool isOnMovingPlatform = false;
 
         private MovingPlatform movingPlatform;
 
         public Vector3 velocity;
+
+        [SerializeField] private ClimbManager climbManager;
 
         private void Start()
         {
@@ -68,6 +70,16 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
         private void Update()
         {
+            if (climbManager.onClimbMode) //GRAVITY
+            {
+                gravity = 0f;
+                mover.isInWalkMode = false;
+            }
+            else
+            {
+                gravity = -22.575f;
+            }
+
             float deltaTime = Time.deltaTime;
             Vector3 movementInput = GetMovementInput();
 
@@ -166,7 +178,7 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
                 groundedIndicator.material.color = isGrounded ? Color.green : Color.blue;
         }
 
-        private void RotateTowards(in Vector3 direction)
+        public void RotateTowards(in Vector3 direction)
         {
             Vector3 flatDirection = Vector3.ProjectOnPlane(direction, transform.up);
 

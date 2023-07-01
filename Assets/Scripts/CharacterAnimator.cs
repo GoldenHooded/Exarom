@@ -87,7 +87,7 @@ public class CharacterAnimator : MonoBehaviour
             anim.SetBool("Crouched", false);
             characterCapsule.Height = normalHeight;
 
-            if (Input.GetKey(KeyCode.LeftShift) && playerValues.stamina > 0)
+            if (Input.GetKey(KeyCode.LeftShift) && playerValues.stamina > 0 && !climbManager.onClimbMode)
             {
                 characterController.realMoveSpeed = characterController.fastMoveSpeed;
                 if (anim.GetBool("Walk"))
