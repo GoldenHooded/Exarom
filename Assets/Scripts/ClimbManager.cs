@@ -39,6 +39,16 @@ public class ClimbManager : MonoBehaviour
         CheckClimb();
     }
 
+    private void FixedUpdate()
+    {
+        Ray forwardRay = new Ray(transform.position + rayOffset, transform.forward);
+        bool ray1 = Physics.Raycast(forwardRay, out RaycastHit hit, 1, climbable);
+        if (onClimbMode && ray1)
+        {
+            AdjustRotation(hit);
+        }
+    }
+
     public bool keyTrigger;
     public bool firstTime = true;
     private void CheckClimb()
@@ -70,15 +80,10 @@ public class ClimbManager : MonoBehaviour
                     keyTrigger = false;
                 } 
             }
-
-            if (onClimbMode && ray1)
-            {
-                AdjustRotation(hit);
-            }
         } 
         else if (ray1 && !ray2)
         {
-
+            onClimbMode = false; //Temporal
         }
         else
         {
@@ -102,9 +107,12 @@ public class ClimbManager : MonoBehaviour
         Quaternion desiredRotation = Quaternion.LookRotation(-hit.normal, transform.up);
 
         // Establece la rotación del jugador
-        transform.rotation = desiredRotation;
+        //transform.rotation = desiredRotation;
 
-        transform.position += transform.forward * (Vector3.Distance(transform.position, hit.point - rayOffset) - 0.4f); 
+        transform.forward = -hit.normal;
+
+        transform.position += transform.forward * (Vector3.Distance(transform.position, hit.point - rayOffset) - 0.4f);
+
     }
 
     private void CheckKeyTrigger()
