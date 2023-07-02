@@ -101,6 +101,7 @@ public class ClimbManager : MonoBehaviour
         }
     }
 
+    private Vector3 normal;
     private void AdjustRotation(RaycastHit hit)
     {
         // Obtiene la normal de la colisión y calcula la rotación deseada
@@ -112,7 +113,6 @@ public class ClimbManager : MonoBehaviour
         transform.forward = -hit.normal;
 
         transform.position += transform.forward * (Vector3.Distance(transform.position, hit.point - rayOffset) - 0.4f);
-
     }
 
     private void CheckKeyTrigger()
