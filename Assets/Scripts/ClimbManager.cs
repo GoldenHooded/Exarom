@@ -93,7 +93,6 @@ public class ClimbManager : MonoBehaviour
         if (ray3 && !firstTime)
         {
             onClimbMode = false;
-            Debug.Log("A");
         }
         else if (!ray3 && firstTime)
         {
