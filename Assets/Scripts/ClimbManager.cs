@@ -1,3 +1,4 @@
+using MenteBacata.ScivoloCharacterController;
 using MenteBacata.ScivoloCharacterControllerDemo;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,12 +13,14 @@ public class ClimbManager : MonoBehaviour
     [Space(10)]
     [SerializeField] private SimpleCharacterController characterController;
     [SerializeField] private PlayerValues playerValues;
+    [SerializeField] private CharacterCapsule capsule;
 
     [Space(10)]
     [SerializeField] private Vector3 rayOffset;
     [SerializeField] private LayerMask climbable;
     [SerializeField] private float moveSpeed;
 
+    private Vector3 normal;
     private void Update()
     {
         if (!canClimb) onClimbMode = false;
@@ -99,8 +102,7 @@ public class ClimbManager : MonoBehaviour
             firstTime = false;
         }
     }
-
-    private Vector3 normal;
+    
     private void AdjustRotation(RaycastHit hit)
     {
         // Obtiene la normal de la colisión y calcula la rotación deseada
@@ -110,8 +112,10 @@ public class ClimbManager : MonoBehaviour
         //transform.rotation = desiredRotation;
 
         transform.forward = -hit.normal;
+        transform.position = (hit.point - rayOffset) + hit.normal * capsule.Radius;
+        //transform.position += transform.forward * (Vector3.Distance(transform.position, hit.point - rayOffset) - 0.4f);
 
-        transform.position += transform.forward * (Vector3.Distance(transform.position, hit.point - rayOffset) - 0.4f);
+        normal = hit.normal;
     }
 
     private void CheckKeyTrigger()
