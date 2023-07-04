@@ -95,7 +95,6 @@ public class ClimbManager : MonoBehaviour
         } 
         else if (ray1 && !ray2)
         {
-            Debug.Log("A");
             onClimbMode = false; //Temporal
         }
         else

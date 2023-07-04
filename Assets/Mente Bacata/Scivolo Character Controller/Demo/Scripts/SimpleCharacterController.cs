@@ -91,6 +91,8 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
             isOnMovingPlatform = false;
 
+            
+
             if (canMove)
             {
                 if (isGrounded && Input.GetButtonDown("X"))
@@ -134,6 +136,11 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
             if (verticalSpeed < hardJumpTresshold)
             {
                 characterAnimator.anim.SetBool("HardLand", true);
+            }
+
+            if (climbManager.onClimbMode)
+            {
+                verticalSpeed = 0;
             }
         }
 
