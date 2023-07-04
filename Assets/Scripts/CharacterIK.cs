@@ -31,6 +31,8 @@ public class CharacterIK : MonoBehaviour
 
     [SerializeField] private SimpleCharacterController controller;
 
+    [SerializeField] private ClimbManager climbManager;
+
     private bool toGoPosTrigger;
 
     private void OnAnimatorIK(int layerIndex)
@@ -95,16 +97,29 @@ public class CharacterIK : MonoBehaviour
         }
 
         offsetTransform.localPosition = new Vector3(offsetTransform.localPosition.x, modelYOffset, offsetTransform.localPosition.z);
+
+        if (climbManager.onClimbMode || lockedMove)
+        {
+            preventMoving = true;
+            preventRotation = true;
+        }
+        else
+        {
+            preventMoving = false; 
+            preventRotation = false;
+        }
     }
+
+    private bool lockedMove;
 
     public void LockMove()
     {
-        preventMoving = true;
+        lockedMove = true;
     }
 
     public void UnlockMove()
     {
-        preventMoving = false;
+        lockedMove = false;
     }
 
     public void LockRotation()

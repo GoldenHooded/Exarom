@@ -36,13 +36,6 @@ public class CharacterAnimator : MonoBehaviour
 
     [SerializeField] private ClimbManager climbManager;
 
-    private Transform cameraTransform;
-
-    private Rigidbody rb;
-
-    private Vector2 input;
-
-    private Vector2 characterDirection;
 
     private void Update()
     {
@@ -50,12 +43,6 @@ public class CharacterAnimator : MonoBehaviour
 
         characterController.canMove = !preventMoving;
         characterController.canRotate = !preventRotation;
-    }
-
-    private void Start()
-    {
-        cameraTransform = Camera.main.transform;
-        rb = GetComponent<Rigidbody>();
     }
 
     void LateUpdate()
