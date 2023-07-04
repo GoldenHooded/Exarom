@@ -19,8 +19,9 @@ public class ClimbManager : MonoBehaviour
     [SerializeField] private Vector3 rayOffset;
     [SerializeField] private LayerMask climbable;
     [SerializeField] private float moveSpeed;
+    [SerializeField] private float smoothSpeed;
+    private Vector3 desiredPosition;
 
-    private Vector3 normal;
     private void Update()
     {
         if (!canClimb) onClimbMode = false;
@@ -112,10 +113,9 @@ public class ClimbManager : MonoBehaviour
         //transform.rotation = desiredRotation;
 
         transform.forward = -hit.normal;
-        transform.position = (hit.point - rayOffset) + hit.normal * capsule.Radius;
-        //transform.position += transform.forward * (Vector3.Distance(transform.position, hit.point - rayOffset) - 0.4f);
+        desiredPosition = (hit.point - rayOffset) + hit.normal * capsule.Radius;
 
-        normal = hit.normal;
+        transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
     }
 
     private void CheckKeyTrigger()
