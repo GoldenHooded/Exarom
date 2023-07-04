@@ -14,13 +14,17 @@ public class ClimbManager : MonoBehaviour
     [SerializeField] private SimpleCharacterController characterController;
     [SerializeField] private PlayerValues playerValues;
     [SerializeField] private CharacterCapsule capsule;
+    [SerializeField] private CharacterAnimator characterAnimator;
+    [SerializeField] private CharacterMover characterMover;
 
     [Space(10)]
     [SerializeField] private Vector3 rayOffset;
     [SerializeField] private LayerMask climbable;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float smoothSpeed;
+    [SerializeField] private float smoothSpeedRotation;
     private Vector3 desiredPosition;
+    private Vector3 desiredNormal;
 
     private void Update()
     {
@@ -69,7 +73,7 @@ public class ClimbManager : MonoBehaviour
         bool ray1 = Physics.Raycast(forwardRay, out RaycastHit hit, 1, climbable);
         bool ray2 = Physics.Raycast(forwardRay2, out RaycastHit hit2, 1, climbable);
         bool ray3 = Physics.Raycast(downRay, out RaycastHit hit3, 0.325f, climbable);
-        if (ray1 && ray2)
+        if (ray1 && ray2 && !hit.collider.CompareTag("Unclimbable") && !hit2.collider.CompareTag("Unclimbable"))
         {
             if (!onClimbMode && canClimb)
             {
@@ -106,14 +110,9 @@ public class ClimbManager : MonoBehaviour
     
     private void AdjustRotation(RaycastHit hit)
     {
-        // Obtiene la normal de la colisión y calcula la rotación deseada
-        Quaternion desiredRotation = Quaternion.LookRotation(-hit.normal, transform.up);
-
-        // Establece la rotación del jugador
-        //transform.rotation = desiredRotation;
-
-        transform.forward = -hit.normal;
-        desiredPosition = (hit.point - rayOffset) + hit.normal * capsule.Radius;
+        desiredNormal = -hit.normal;
+        transform.forward = Vector3.Lerp(transform.forward, desiredNormal, smoothSpeedRotation * Time.deltaTime);
+        desiredPosition = (hit.point - rayOffset) + hit.normal * (capsule.Radius + capsule.contactOffset);
 
         transform.position = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
     }
@@ -145,6 +144,9 @@ public class ClimbManager : MonoBehaviour
     {
         float x = Input.GetAxisRaw("Horizontal");
         float y = Input.GetAxisRaw("Vertical");
+
+        characterAnimator.anim.SetFloat("XInput", Input.GetAxis("Horizontal"));
+        characterAnimator.anim.SetFloat("YInput", Input.GetAxis("Vertical"));
 
         if (!left)
         {

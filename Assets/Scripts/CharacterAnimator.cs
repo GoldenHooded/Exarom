@@ -60,6 +60,8 @@ public class CharacterAnimator : MonoBehaviour
 
     void LateUpdate()
     {
+        anim.SetBool("OnClimbMode", climbManager.onClimbMode);
+
         preventMoving = characterIK.preventMoving;
         preventRotation = characterIK.preventRotation;
 

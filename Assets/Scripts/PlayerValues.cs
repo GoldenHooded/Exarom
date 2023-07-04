@@ -19,10 +19,16 @@ public class PlayerValues : MonoBehaviour
     public bool canRecoverStamina = false;
     public float staminaRecoverSpeed;
     private bool recoveringStamina = false;
+    [SerializeField] private bool infiniteStamina;
 
     private bool staminaTrigger = false;
     void Update()
     {
+        if (infiniteStamina)
+        {
+            stamina = 1;
+        }
+
         staminaAlphaReal = Mathf.Lerp(staminaAlphaReal, staminaAlpha, Time.deltaTime * staminaSpeedAlpha);
 
         staminaBar.color = new Color(staminaBar.color.r, staminaBar.color.g, staminaBar.color.b, staminaAlphaReal);
