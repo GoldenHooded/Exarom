@@ -18,7 +18,8 @@ public class ClimbManager : MonoBehaviour
     [SerializeField] private CharacterMover characterMover;
 
     [Space(10)]
-    [SerializeField] private Vector3 rayOffset;
+    [SerializeField] private float realRayOffset;
+    private Vector3 rayOffset;
     [SerializeField] private LayerMask climbable;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float smoothSpeed;
@@ -28,6 +29,8 @@ public class ClimbManager : MonoBehaviour
 
     private void Update()
     {
+        rayOffset = realRayOffset * transform.up;
+
         if (!canClimb) onClimbMode = false;
         if (onClimbMode) { characterController.canMove = false; characterController.canRotate = false; }
         if (playerValues.stamina <= 0) { canClimb = false; } 
@@ -59,10 +62,11 @@ public class ClimbManager : MonoBehaviour
 
     public bool keyTrigger;
     public bool firstTime = true;
+    private bool triggerNotClimb = false;
     private void CheckClimb()
     {
         Ray forwardRay = new Ray(transform.position + rayOffset, transform.forward);
-        Ray forwardRay2 = new Ray(transform.position + rayOffset * 1.5f, transform.forward);
+        Ray forwardRay2 = new Ray(transform.position + rayOffset * 1.8f, transform.forward);
         Ray downRay = new Ray(transform.position, - transform.up);
         Ray upRay = new Ray(transform.position + rayOffset * 2.5f + new Vector3(transform.forward.x, 0, transform.forward.z) * 0.6f, Vector3.down);
         Debug.DrawRay(forwardRay.origin, forwardRay.direction, Color.blue);
@@ -91,6 +95,7 @@ public class ClimbManager : MonoBehaviour
         } 
         else if (ray1 && !ray2)
         {
+            Debug.Log("A");
             onClimbMode = false; //Temporal
         }
         else
@@ -105,6 +110,20 @@ public class ClimbManager : MonoBehaviour
         else if (!ray3 && firstTime)
         {
             firstTime = false;
+        }
+
+        if (onClimbMode)
+        {
+            triggerNotClimb = false;
+
+            if (Input.GetKeyDown(KeyCode.LeftControl))
+            {
+                onClimbMode = false;
+            }
+        }
+        else if (!triggerNotClimb)
+        {
+            transform.forward = new Vector3(transform.forward.x, 0, transform.forward.z);
         }
     }
     
