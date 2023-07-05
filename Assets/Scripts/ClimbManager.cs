@@ -27,6 +27,13 @@ public class ClimbManager : MonoBehaviour
     private Vector3 desiredPosition;
     private Vector3 desiredNormal;
 
+    [HideInInspector] public bool topClimb;
+    [HideInInspector] public bool finishedTC;
+
+    [Space(10)]
+    public Vector3 transformDesiredPos;
+    [SerializeField] private float speedChangePos;
+
     private void Update()
     {
         rayOffset = realRayOffset * transform.up;
@@ -36,18 +43,28 @@ public class ClimbManager : MonoBehaviour
         if (playerValues.stamina <= 0) { canClimb = false; } 
         else { canClimb = true; } //<== Add conditions in order to enable climb mode
 
-        if (onClimbMode)
+        if (!topClimb)
         {
-            playerValues.stamina -= staminaSpentSpeed * Time.deltaTime;
+            if (onClimbMode)
+            {
+                playerValues.stamina -= staminaSpentSpeed * Time.deltaTime;
 
-            ClimbMove();
+                ClimbMove();
+
+                characterAnimator.anim.SetBool("HardLand", false);
+            }
+            else
+            {
+                firstTime = true;
+            }
+
+            CheckClimb();
+            tcTrigger = false;
         }
         else
         {
-            firstTime = true;
+            TopClimb();
         }
-
-        CheckClimb();
     }
 
     private void FixedUpdate()
@@ -60,13 +77,37 @@ public class ClimbManager : MonoBehaviour
         }
     }
 
+    private Vector3 finalPos;
+    private bool tcTrigger;
+    private void TopClimb()
+    {
+        if (!tcTrigger) 
+        { 
+            characterAnimator.anim.SetTrigger("TopClimb");
+            tcTrigger = true;
+        }
+
+        if (finishedTC)
+        {
+            transform.position = Vector3.Lerp(transform.position, finalPos, Time.deltaTime * 20);
+            //transform.position = finalPos;
+            if (Vector3.Distance(transform.position, finalPos) < 0.2f)
+            {
+                topClimb = false;
+                onClimbMode = false;
+            }
+        }
+
+        //transform.position = Vector3.Lerp(transform.position, transformDesiredPos, Time.deltaTime * speedChangePos);
+    }
+
     public bool keyTrigger;
     public bool firstTime = true;
     private bool triggerNotClimb = false;
     private void CheckClimb()
     {
         Ray forwardRay = new Ray(transform.position + rayOffset, transform.forward);
-        Ray forwardRay2 = new Ray(transform.position + rayOffset * 1.8f, transform.forward);
+        Ray forwardRay2 = new Ray(transform.position + rayOffset * 1.85f, transform.forward);
         Ray downRay = new Ray(transform.position, - transform.up);
         Ray upRay = new Ray(transform.position + rayOffset * 2.5f + new Vector3(transform.forward.x, 0, transform.forward.z) * 0.6f, Vector3.down);
         Debug.DrawRay(forwardRay.origin, forwardRay.direction, Color.blue);
@@ -76,7 +117,8 @@ public class ClimbManager : MonoBehaviour
 
         bool ray1 = Physics.Raycast(forwardRay, out RaycastHit hit, 1, climbable);
         bool ray2 = Physics.Raycast(forwardRay2, out RaycastHit hit2, 1, climbable);
-        bool ray3 = Physics.Raycast(downRay, out RaycastHit hit3, 0.325f, climbable);
+        bool ray3 = Physics.Raycast(downRay, 0.325f, climbable);
+        bool ray4 = Physics.Raycast(upRay, out RaycastHit hit4, 1, climbable);
         if (ray1 && ray2 && !hit.collider.CompareTag("Unclimbable") && !hit2.collider.CompareTag("Unclimbable"))
         {
             if (!onClimbMode && canClimb)
@@ -93,9 +135,10 @@ public class ClimbManager : MonoBehaviour
                 } 
             }
         } 
-        else if (ray1 && !ray2)
+        else if (ray1 && !ray2 && onClimbMode && ray4)
         {
-            onClimbMode = false; //Temporal
+            finalPos = hit4.point;
+            topClimb = true;
         }
         else
         {

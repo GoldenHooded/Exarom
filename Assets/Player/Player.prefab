@@ -644,6 +644,7 @@ MonoBehaviour:
   playerTransform: {fileID: 1247649876193310094}
   controller: {fileID: 7462064530677517963}
   climbManager: {fileID: 6302256058387580509}
+  topClimbPos: {x: 0, y: 0, z: 0}
 --- !u!1 &1730744246850508995
 GameObject:
   m_ObjectHideFlags: 0
@@ -3401,6 +3402,9 @@ MonoBehaviour:
   moveSpeed: 3
   smoothSpeed: 10
   smoothSpeedRotation: 10
+  topClimb: 0
+  transformDesiredPos: {x: 0, y: 0, z: 0}
+  speedChangePos: 5
   keyTrigger: 0
   firstTime: 1
 --- !u!1 &7530286213920219236

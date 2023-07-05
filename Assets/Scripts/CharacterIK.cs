@@ -35,6 +35,8 @@ public class CharacterIK : MonoBehaviour
 
     private bool toGoPosTrigger;
 
+    public Vector3 topClimbPos;
+
     private void OnAnimatorIK(int layerIndex)
     {
         Vector3 leastY = modelTransform.position;
@@ -105,12 +107,36 @@ public class CharacterIK : MonoBehaviour
         }
         else
         {
-            preventMoving = false; 
+            preventMoving = false;
             preventRotation = false;
         }
     }
 
+    private void Update()
+    {
+        if (climbManager.topClimb)
+        {
+            transform.localPosition = topClimbPos;
+        }
+
+        climbManager.finishedTC = finishedTopClimb;
+    }
+
     private bool lockedMove;
+
+    private Vector3 startPos;
+    public void SaveStartPos()
+    {
+        startPos = playerTransform.position;
+        finishedTopClimb = false;
+    }
+
+    private bool finishedTopClimb;
+
+    public void FinishedClimb()
+    {
+        finishedTopClimb = true;
+    }
 
     public void LockMove()
     {
