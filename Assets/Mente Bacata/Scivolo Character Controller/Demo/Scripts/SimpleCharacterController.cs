@@ -48,6 +48,8 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
         private float nextUngroundedTime = -1f;
 
         private Transform cameraTransform;
+
+        private int jumpsLeft = 2;
         
         [HideInInspector] public MoveContact[] moveContacts = CharacterMover.NewMoveContactArray;
 
@@ -95,16 +97,18 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
             if (canMove)
             {
-                if (isGrounded && Input.GetButtonDown("X"))
+                if (isGrounded && Input.GetButtonDown("X") || jumpsLeft > 0 && Input.GetButtonDown("X"))
                 {
                     GetComponent<CharacterAnimator>().Jump();
                     verticalSpeed = jumpSpeed;
                     nextUngroundedTime = -1f;
+                    jumpsLeft--;
                     isGrounded = false;
                 }
 
                 if (isGrounded)
                 {
+                    jumpsLeft = 2;
                     mover.isInWalkMode = true;
                     verticalSpeed = 0f;
 

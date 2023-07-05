@@ -33,6 +33,10 @@ public class CharacterIK : MonoBehaviour
 
     [SerializeField] private ClimbManager climbManager;
 
+    public Vector3 bracedPos;
+
+    public bool braced;
+
     private bool toGoPosTrigger;
 
     public Vector3 topClimbPos;
@@ -112,6 +116,9 @@ public class CharacterIK : MonoBehaviour
         }
     }
 
+
+    private Vector3 savedPos;
+    private Quaternion savedRot;
     private void Update()
     {
         if (climbManager.topClimb)
@@ -120,6 +127,26 @@ public class CharacterIK : MonoBehaviour
         }
 
         climbManager.finishedTC = finishedTopClimb;
+
+        if (bracedPos == Vector3.zero)
+        {
+            savedPos = playerTransform.position;
+            savedRot = playerTransform.rotation;
+            climbManager.braced = false;
+        }
+        else
+        {
+            climbManager.braced = true;
+        }
+
+        if (braced)
+        {
+            playerTransform.rotation = savedRot;
+        }
+
+        climbManager.braced = braced;
+
+        climbManager.destintationBraced = playerTransform.TransformDirection(bracedPos) + savedPos;
     }
 
     private bool lockedMove;
@@ -132,6 +159,11 @@ public class CharacterIK : MonoBehaviour
     }
 
     private bool finishedTopClimb;
+
+    public void ResetBraceTrigger()
+    {
+        characterAnim.anim.ResetTrigger("Brace");
+    }
 
     public void FinishedClimb()
     {

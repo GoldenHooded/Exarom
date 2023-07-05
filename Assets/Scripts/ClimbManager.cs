@@ -1,5 +1,6 @@
 using MenteBacata.ScivoloCharacterController;
 using MenteBacata.ScivoloCharacterControllerDemo;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,6 +34,12 @@ public class ClimbManager : MonoBehaviour
     [Space(10)]
     public Vector3 transformDesiredPos;
     [SerializeField] private float speedChangePos;
+    [SerializeField] private float minAngle = 50f;
+
+    [Space(10)]
+    public bool braced;
+    public Vector3 destintationBraced;
+    [SerializeField] private float bracedSpeed;
 
     private void Update()
     {
@@ -43,7 +50,7 @@ public class ClimbManager : MonoBehaviour
         if (playerValues.stamina <= 0) { canClimb = false; } 
         else { canClimb = true; } //<== Add conditions in order to enable climb mode
 
-        if (!topClimb)
+        if (!topClimb && !braced)
         {
             if (onClimbMode)
             {
@@ -52,6 +59,11 @@ public class ClimbManager : MonoBehaviour
                 ClimbMove();
 
                 characterAnimator.anim.SetBool("HardLand", false);
+
+                if (Input.GetButton("X"))
+                {
+                    characterAnimator.anim.SetTrigger("Brace");
+                }
             }
             else
             {
@@ -61,9 +73,29 @@ public class ClimbManager : MonoBehaviour
             CheckClimb();
             tcTrigger = false;
         }
-        else
+        else if (topClimb)
         {
             TopClimb();
+            SemiCheckClimb();
+        } 
+        else if (braced)
+        {
+            Braced();
+            CheckClimb();
+        }
+    }
+
+    private void Braced()
+    {
+        transform.position = Vector3.Lerp(transform.position, destintationBraced, Time.deltaTime * bracedSpeed);
+
+        Ray forwardRay = new Ray(transform.position + rayOffset, transform.forward);
+
+        bool ray1 = Physics.Raycast(forwardRay, out RaycastHit hit, 1, climbable);
+
+        if (!ray1)
+        {
+            braced = false;
         }
     }
 
@@ -71,10 +103,27 @@ public class ClimbManager : MonoBehaviour
     {
         Ray forwardRay = new Ray(transform.position + rayOffset, transform.forward);
         bool ray1 = Physics.Raycast(forwardRay, out RaycastHit hit, 1, climbable);
-        if (onClimbMode && ray1)
+        if (onClimbMode && ray1 && !topClimb)
         {
             AdjustRotation(hit);
         }
+    }
+
+    private void SemiCheckClimb()
+    {
+        Ray forwardRay = new Ray(transform.position + rayOffset, transform.forward);
+        Debug.DrawRay(forwardRay.origin, forwardRay.direction, Color.blue);
+        bool ray1 = Physics.Raycast(forwardRay, out RaycastHit hit, 1, climbable);
+
+        if (!ray1)
+        {
+            Invoke("StopClimb", 1f);
+        }
+    }
+
+    private void StopClimb()
+    {
+        onClimbMode = false;
     }
 
     private Vector3 finalPos;
@@ -90,15 +139,12 @@ public class ClimbManager : MonoBehaviour
         if (finishedTC)
         {
             transform.position = Vector3.Lerp(transform.position, finalPos, Time.deltaTime * 20);
-            //transform.position = finalPos;
             if (Vector3.Distance(transform.position, finalPos) < 0.2f)
             {
                 topClimb = false;
                 onClimbMode = false;
             }
         }
-
-        //transform.position = Vector3.Lerp(transform.position, transformDesiredPos, Time.deltaTime * speedChangePos);
     }
 
     public bool keyTrigger;
@@ -107,7 +153,7 @@ public class ClimbManager : MonoBehaviour
     private void CheckClimb()
     {
         Ray forwardRay = new Ray(transform.position + rayOffset, transform.forward);
-        Ray forwardRay2 = new Ray(transform.position + rayOffset * 1.85f, transform.forward);
+        Ray forwardRay2 = new Ray(transform.position + rayOffset * 1.8f, new Vector3(transform.forward.x * 2, 0, transform.forward.z * 2));
         Ray downRay = new Ray(transform.position, - transform.up);
         Ray upRay = new Ray(transform.position + rayOffset * 2.5f + new Vector3(transform.forward.x, 0, transform.forward.z) * 0.6f, Vector3.down);
         Debug.DrawRay(forwardRay.origin, forwardRay.direction, Color.blue);
@@ -116,26 +162,40 @@ public class ClimbManager : MonoBehaviour
         Debug.DrawRay(downRay.origin, downRay.direction, Color.red);
 
         bool ray1 = Physics.Raycast(forwardRay, out RaycastHit hit, 1, climbable);
-        bool ray2 = Physics.Raycast(forwardRay2, out RaycastHit hit2, 1, climbable);
+        bool ray2 = Physics.Raycast(forwardRay2, out RaycastHit hit2, 2.5f, climbable);
+        bool ray5 = Physics.Raycast(forwardRay2, out RaycastHit hit5, 2, climbable);
         bool ray3 = Physics.Raycast(downRay, 0.325f, climbable);
         bool ray4 = Physics.Raycast(upRay, out RaycastHit hit4, 1, climbable);
-        if (ray1 && ray2 && !hit.collider.CompareTag("Unclimbable") && !hit2.collider.CompareTag("Unclimbable"))
-        {
-            if (!onClimbMode && canClimb)
-            {
-                if (Input.GetKey(KeyCode.W) && !keyTrigger)
-                {
-                    keyTrigger = true;
 
-                    Invoke("CheckKeyTrigger", 0.5f);
-                }
-                else
+        Ray forwardRay3_L = new Ray(transform.position + rayOffset - transform.right * 0.6f, transform.forward);
+        Ray forwardRay4_R = new Ray(transform.position + rayOffset + transform.right * 0.6f, transform.forward);
+
+        bool left = Physics.Raycast(forwardRay3_L, 1, climbable);
+        bool right = Physics.Raycast(forwardRay4_R, 1, climbable);
+
+        bool bool1 = left || right;
+
+        if (ray1 && ray2 && hit.collider == hit2.collider && bool1 && Vector3.Angle(hit.normal, Vector3.up) > minAngle ||
+            ray1 && ray2 && hit.collider != hit2.collider && bool1 && Vector3.Angle(hit.normal, Vector3.up) > minAngle && Vector3.Angle(hit.normal, Vector3.up) == Vector3.Angle(hit2.normal, Vector3.up))
+        {
+            if (!hit.collider || hit.collider && !hit.collider.CompareTag("Unclimbable"))
+            {
+                if (!onClimbMode && canClimb)
                 {
-                    keyTrigger = false;
+                    if (Input.GetKey(KeyCode.W) && !keyTrigger)
+                    {
+                        keyTrigger = true;
+
+                        Invoke("CheckKeyTrigger", 0.2f);
+                    }
+                    else
+                    {
+                        keyTrigger = false;
+                    }
                 } 
             }
-        } 
-        else if (ray1 && !ray2 && onClimbMode && ray4)
+        }
+        else if (ray1 && !ray2 && onClimbMode && ray4 || ray1 && ray2 && onClimbMode && ray4 && hit.collider != hit2.collider)
         {
             finalPos = hit4.point;
             topClimb = true;
