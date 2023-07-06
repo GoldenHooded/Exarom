@@ -41,6 +41,8 @@ public class CharacterIK : MonoBehaviour
 
     public Vector3 topClimbPos;
 
+    private Vector3 savedLastXZ;
+
     private void OnAnimatorIK(int layerIndex)
     {
         Vector3 leastY = modelTransform.position;
@@ -88,11 +90,12 @@ public class CharacterIK : MonoBehaviour
             if (characterAnim.anim.GetBool("Walk") || characterAnim.anim.GetBool("Air"))
             {
                 toGoPos = new Vector3(playerTransform.position.x, playerTransform.position.y - 0.01f, playerTransform.position.z);
-                toGoPosTrigger = false; 
+                toGoPosTrigger = false;
+                savedLastXZ = playerTransform.position;
             }
             else if (!toGoPosTrigger)
             {
-                toGoPos = new Vector3(playerTransform.position.x, playerTransform.position.y - 0.01f, playerTransform.position.z);
+                toGoPos = new Vector3(savedLastXZ.x, playerTransform.position.y - 0.01f, savedLastXZ.z);
                 Invoke("ToGoPosTrigger", 0.1f);
                 Invoke("ToGoPosTrigger", 0.25f);
 
@@ -192,7 +195,7 @@ public class CharacterIK : MonoBehaviour
 
     private void ToGoPosTrigger()
     {
-        toGoPos = new Vector3(playerTransform.position.x, playerTransform.position.y - 0.01f, playerTransform.position.z);
+        toGoPos = new Vector3(savedLastXZ.x, playerTransform.position.y - 0.01f, savedLastXZ.z);
     }
 
     public void ResetHardJump()

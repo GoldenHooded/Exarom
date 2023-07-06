@@ -97,7 +97,7 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
             if (canMove)
             {
-                if (isGrounded && Input.GetButtonDown("X") || jumpsLeft > 0 && Input.GetButtonDown("X"))
+                if (isGrounded && Input.GetButtonDown("X") /*|| jumpsLeft > 0 && Input.GetButtonDown("X")*/) //<== Double Jump
                 {
                     GetComponent<CharacterAnimator>().Jump();
                     verticalSpeed = jumpSpeed;

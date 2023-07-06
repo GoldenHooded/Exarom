@@ -60,7 +60,7 @@ public class ClimbManager : MonoBehaviour
 
                 characterAnimator.anim.SetBool("HardLand", false);
 
-                if (Input.GetButton("X"))
+                if (Input.GetButtonDown("X"))
                 {
                     characterAnimator.anim.SetTrigger("Brace");
                 }
