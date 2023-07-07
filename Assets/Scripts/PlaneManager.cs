@@ -69,7 +69,7 @@ public class PlaneManager : MonoBehaviour
         }
 
         Ray ray = new Ray(transform.position + Vector3.up * 0.5f, Vector3.down);
-        bool hit = Physics.Raycast(ray, out RaycastHit hitInfo, 1.5f, layerMask);
+        bool hit = Physics.Raycast(ray, out RaycastHit hitInfo, 2.5f, layerMask);
         if (hit)
         {
             planing = false;
