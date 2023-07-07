@@ -102,6 +102,11 @@ public class CharacterIK : MonoBehaviour
                 toGoPosTrigger = true;
             }
 
+            if (Input.GetAxisRaw("Horizontal") != 0 && Input.GetAxisRaw("Vertical") != 0)
+            {
+                toGoPos = new Vector3(playerTransform.position.x, playerTransform.position.y - 0.01f, playerTransform.position.z);
+            }
+
             modelTransform.position = Vector3.Lerp(transform.position, toGoPos, speed * Time.deltaTime);
         }
 
