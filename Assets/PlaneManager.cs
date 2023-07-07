@@ -2,6 +2,8 @@ using MenteBacata.ScivoloCharacterController;
 using MenteBacata.ScivoloCharacterControllerDemo;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
 
@@ -25,6 +27,8 @@ public class PlaneManager : MonoBehaviour
 
     [SerializeField] private CharacterAnimator characterAnimator;
 
+    [SerializeField] private LayerMask layerMask;
+
     private Transform cameraTransform;
 
     private void Start()
@@ -34,7 +38,16 @@ public class PlaneManager : MonoBehaviour
 
     private void Update()
     {
+        if (characterAnimator.anim.GetBool("Air") && Input.GetButtonDown("X") && !planing)
+        {
+            planing = true;
+        } 
+        else if (planing && Input.GetButtonDown("X"))
+        {
+            planing = false;
+        }
 
+        characterAnimator.anim.SetBool("Brace", planing);
 
         if (climbManager.onClimbMode)
         {
@@ -43,6 +56,8 @@ public class PlaneManager : MonoBehaviour
 
         if (planing)
         {
+            simpleCharacterController.verticalSpeed = 0;
+
             Vector3 input = GetInput();
 
             Vector3 velocity = input * planingSpeed;
@@ -51,6 +66,13 @@ public class PlaneManager : MonoBehaviour
 
             mover.Move(velocity * Time.deltaTime, simpleCharacterController.moveContacts, out simpleCharacterController.contactCount);
             simpleCharacterController.RotateTowards(input * lerpInputSpeed, planingRotSpeed);
+        }
+
+        Ray ray = new Ray(transform.position + Vector3.up * 0.5f, Vector3.down);
+        bool hit = Physics.Raycast(ray, out RaycastHit hitInfo, 1.5f, layerMask);
+        if (hit)
+        {
+            planing = false;
         }
     }
 
