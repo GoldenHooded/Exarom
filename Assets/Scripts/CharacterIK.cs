@@ -33,6 +33,10 @@ public class CharacterIK : MonoBehaviour
 
     [SerializeField] private ClimbManager climbManager;
 
+    [SerializeField] private PlayerValues playerValues;
+
+    [SerializeField] private float staminaConsume = 0.15f;
+
     public Vector3 bracedPos;
 
     public bool braced;
@@ -42,6 +46,13 @@ public class CharacterIK : MonoBehaviour
     public Vector3 topClimbPos;
 
     private Vector3 savedLastXZ;
+
+    private void Awake()
+    {
+        toGoPos = new Vector3(playerTransform.position.x, playerTransform.position.y - 0.01f, playerTransform.position.z);
+        toGoPosTrigger = false;
+        savedLastXZ = playerTransform.position;
+    }
 
     private void OnAnimatorIK(int layerIndex)
     {
@@ -79,7 +90,7 @@ public class CharacterIK : MonoBehaviour
             }
         }
 
-        toGoPos = leastY;
+        toGoPos = new Vector3(toGoPos.x, leastY.y, toGoPos.z);
 
         if (preventMoving)
         {
@@ -171,6 +182,11 @@ public class CharacterIK : MonoBehaviour
     public void ResetBraceTrigger()
     {
         characterAnim.anim.ResetTrigger("Brace");
+    }
+
+    public void StaminaJump()
+    {
+        playerValues.stamina -= staminaConsume;
     }
 
     public void FinishedClimb()

@@ -47,7 +47,7 @@ public class ClimbManager : MonoBehaviour
 
         if (!canClimb) onClimbMode = false;
         if (onClimbMode) { characterController.canMove = false; characterController.canRotate = false; }
-        if (playerValues.stamina <= 0) { canClimb = false; } 
+        if (playerValues.stamina <= 0) { canClimb = false; onClimbMode = false; topClimb = false; } 
         else { canClimb = true; } //<== Add conditions in order to enable climb mode
 
         if (!topClimb && !braced)
