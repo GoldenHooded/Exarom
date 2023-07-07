@@ -3497,6 +3497,7 @@ MonoBehaviour:
   playerValues: {fileID: 5859799456169353568}
   staminaSpent: 0.15
   climbManager: {fileID: 6302256058387580509}
+  planeManager: {fileID: 6411976945555101536}
 --- !u!114 &6302256058387580509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3547,13 +3548,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   planing: 1
-  planingSpeed: 6
+  planingSpeed: 7.5
   planingRotSpeed: 200
-  gravity: -0.8
+  gravity: -1.25
   climbManager: {fileID: 6302256058387580509}
   mover: {fileID: 8473387215249307580}
   simpleCharacterController: {fileID: 7462064530677517963}
   characterIK: {fileID: 5305908065499815415}
+  characterAnimator: {fileID: 7459922612036177924}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 131153
   lerpInputSpeed: 2
 --- !u!1 &7530286213920219236
 GameObject:
