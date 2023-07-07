@@ -97,6 +97,8 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
 
             if (canMove)
             {
+                transform.forward = new Vector3(transform.forward.x, 0, transform.forward.z);
+
                 if (isGrounded && Input.GetButtonDown("X") /*|| jumpsLeft > 0 && Input.GetButtonDown("X")*/) //<== Double Jump
                 {
                     GetComponent<CharacterAnimator>().Jump();
