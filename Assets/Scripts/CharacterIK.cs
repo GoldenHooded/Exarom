@@ -35,6 +35,8 @@ public class CharacterIK : MonoBehaviour
 
     [SerializeField] private PlayerValues playerValues;
 
+    [SerializeField] private PlaneManager planeManager;
+
     [SerializeField] private float staminaConsume = 0.15f;
 
     public Vector3 bracedPos;
@@ -123,7 +125,7 @@ public class CharacterIK : MonoBehaviour
 
         offsetTransform.localPosition = new Vector3(offsetTransform.localPosition.x, modelYOffset, offsetTransform.localPosition.z);
 
-        if (climbManager.onClimbMode || lockedMove)
+        if (climbManager.onClimbMode || lockedMove || planeManager.planing)
         {
             preventMoving = true;
             preventRotation = true;

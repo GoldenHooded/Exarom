@@ -200,6 +200,17 @@ namespace MenteBacata.ScivoloCharacterControllerDemo
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
+        public void RotateTowards(in Vector3 direction, float speed)
+        {
+            Vector3 flatDirection = Vector3.ProjectOnPlane(direction, transform.up);
+
+            if (flatDirection.sqrMagnitude < 1E-06f)
+                return;
+
+            Quaternion targetRotation = Quaternion.LookRotation(flatDirection, transform.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, speed * Time.deltaTime);
+        }
+
         private void ApplyPlatformMovement(MovingPlatform movingPlatform)
         {
             GetMovementFromMovingPlatform(movingPlatform, out Vector3 movement, out float upRotation);

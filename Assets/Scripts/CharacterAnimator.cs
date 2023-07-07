@@ -36,6 +36,8 @@ public class CharacterAnimator : MonoBehaviour
 
     [SerializeField] private ClimbManager climbManager;
 
+    [SerializeField] private PlaneManager planeManager;
+
 
     private void Update()
     {
@@ -79,7 +81,7 @@ public class CharacterAnimator : MonoBehaviour
             if (Input.GetKey(KeyCode.LeftShift) && playerValues.stamina > 0 && !climbManager.onClimbMode)
             {
                 characterController.realMoveSpeed = characterController.fastMoveSpeed;
-                if (anim.GetBool("Walk"))
+                if (anim.GetBool("Walk") && !planeManager.planing && !climbManager.onClimbMode)
                 {
                     playerValues.stamina -= Time.deltaTime * staminaSpent;
                 }
