@@ -1,1 +1,1 @@
-Survival game
+3D exploration game
